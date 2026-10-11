@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кликер Хомяка</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <div class="game-container">
+        <h1>🐹 Кликер Хомяка</h1>
+        
+        <div class="score-board">
+            Монеты: <span id="coins">0</span>
+        </div>
+
+        <!-- Наш кликабельный хомяк -->
+        <img id="hamster" src="https://i.imgur.com/76ZJ0aS.png" alt="Хомяк">
+
+        <!-- Блок с бустами -->
+        <div class="boosts">
+            <button id="boostBtn" class="boost-button">Купить буст (50 монет)</button>
+            <div id="boostStatus" class="boost-status"></div>
+        </div>
+        
+        <div id="message" class="message"></div>
+    </div>
+
+    <!-- Подключаем аудиофайл. Можно заменить на любую другую ссылку на звук -->
+    <audio id="clickSound" src="https://assets.mixkit.co/sfx/preview/mixkit-unlock-game-notification-253.mp3" preload="auto"></audio>
+
+    <script src="script.js"></script>
+</body>
+</html>
