@@ -1,14 +1,15 @@
 const tg = window.Telegram.WebApp;
 tg.expand();
 
-// Элементы страницы
-const hamster = document.getElementById('hamster');
+// --- ЭЛЕМЕНТЫ СТРАНИЦЫ ---
+const coinBtn = document.getElementById('coinBtn');
 const coinsDisplay = document.getElementById('coins');
 const messageDisplay = document.getElementById('message');
 const shopBtn = document.getElementById('shopBtn');
 const shopModal = document.getElementById('shopModal');
 const closeShop = document.getElementById('closeShop');
 const upgradesList = document.getElementById('upgradesList');
+const autoIncomeDisplay = document.getElementById('autoIncome');
 
 // --- БАЗОВЫЕ ДАННЫЕ ИГРЫ ---
 let coins = parseInt(localStorage.getItem('tg_coins')) || 0;
@@ -19,7 +20,7 @@ const upgrades = [
     {
         id: 'click_1',
         name: 'Коврик для мыши',
-        desc: 'Увеличивает доход за клик на 1',
+        desc: 'Увеличивает доход за тап на 1',
         cost: 10,
         value: 1,
         type: 'click'
@@ -27,7 +28,7 @@ const upgrades = [
     {
         id: 'click_2',
         name: 'Ореховая диета',
-        desc: 'Увеличивает доход за клик на 5',
+        desc: 'Увеличивает доход за тап на 5',
         cost: 50,
         value: 5,
         type: 'click'
@@ -53,27 +54,39 @@ const upgrades = [
 // Загружаем купленные улучшения
 const ownedUpgrades = JSON.parse(localStorage.getItem('tg_owned')) || {};
 
-// --- ФУНКЦИИ ---
+// --- ФУНКЦИИ СОХРАНЕНИЯ И ОБНОВЛЕНИЯ ---
 function saveGame() {
     localStorage.setItem('tg_coins', coins);
     localStorage.setItem('tg_owned', JSON.stringify(ownedUpgrades));
 }
 
 function updateCoins() {
-    coinsDisplay.textContent = coins;
+    coinsDisplay.textContent = coins.toLocaleString();
 }
 
-// Показываем сообщение над хомяком
+// Считаем пассивный доход для отображения
+function updateAutoIncome() {
+    let income = 0;
+    Object.keys(ownedUpgrades).forEach(key => {
+        const upg = upgrades.find(u => u.id === key);
+        if (upg && upg.type === 'auto') {
+            income += upg.value * ownedUpgrades[key];
+        }
+    });
+    autoIncomeDisplay.textContent = income;
+}
+
+// Показываем сообщение над монеткой
 function showMessage(text) {
     messageDisplay.textContent = text;
     messageDisplay.classList.add('show');
     setTimeout(() => {
         messageDisplay.classList.remove('show');
-    }, 1000);
+    }, 800);
 }
 
-// --- ЛОГИКА КЛИКА ---
-hamster.addEventListener('click', () => {
+// --- ЛОГИКА КЛИКА (ТАПА) ---
+coinBtn.addEventListener('click', () => {
     coins += clickPower;
     updateCoins();
     saveGame();
@@ -83,27 +96,31 @@ hamster.addEventListener('click', () => {
 // --- ЛОГИКА МАГАЗИНА ---
 function renderShop() {
     upgradesList.innerHTML = '';
+    
     upgrades.forEach(item => {
         const card = document.createElement('div');
         card.className = 'upgrade-card';
 
-        const owned = ownedUpgrades[item.id];
+        const owned = ownedUpgrades[item.id] || 0;
         
         // Считаем цену (каждая следующая покупка дороже на 15%)
         let currentCost = item.cost;
-        if (owned && item.type === 'click') {
+        if (owned > 0 && item.type === 'click') {
             currentCost = Math.floor(item.cost * Math.pow(1.15, owned));
         }
 
+        // Если это авто-доход, показываем уровень (x1, x2)
+        const levelText = (item.type === 'auto' && owned > 0) ? ` x${owned}` : '';
+
         card.innerHTML = `
             <div class="upgrade-info">
-                <h3>${item.name} ${owned && item.type === 'auto' ? `x${owned}` : ''}</h3>
+                <h3>${item.name}${levelText}</h3>
                 <p>${item.desc}</p>
             </div>
             <div class="upgrade-buy">
                 <button class="upgrade-btn ${owned && item.type !== 'auto' ? 'owned' : ''}" 
                         data-id="${item.id}" ${coins < currentCost || (owned && item.type !== 'auto') ? 'disabled' : ''}>
-                    ${owned && item.type !== 'auto' ? '✓' : currentCost}
+                    ${owned && item.type !== 'auto' ? '✓' : currentCost.toLocaleString()}
                 </button>
             </div>
         `;
@@ -116,10 +133,11 @@ function renderShop() {
             const id = e.target.dataset.id;
             const upgrade = upgrades.find(u => u.id === id);
             
-            // Считаем актуальную цену
             let cost = upgrade.cost;
-            if (ownedUpgrades[id] && upgrade.type === 'click') {
-                cost = Math.floor(upgrade.cost * Math.pow(1.15, ownedUpgrades[id]));
+            const owned = ownedUpgrades[id] || 0;
+            
+            if (owned > 0 && upgrade.type === 'click') {
+                cost = Math.floor(upgrade.cost * Math.pow(1.15, owned));
             }
 
             if (coins >= cost) {
@@ -136,6 +154,7 @@ function renderShop() {
                 }
                 
                 updateCoins();
+                updateAutoIncome();
                 saveGame();
                 renderShop(); // Перерисовываем магазин с новыми ценами
             }
@@ -145,15 +164,15 @@ function renderShop() {
 
 // --- АВТОМАТИЧЕСКИЙ ДОХОД (Auto-clickers) ---
 setInterval(() => {
-    let autoIncome = 0;
+    let income = 0;
     Object.keys(ownedUpgrades).forEach(key => {
         const upg = upgrades.find(u => u.id === key);
         if (upg && upg.type === 'auto') {
-            autoIncome += upg.value * ownedUpgrades[key];
+            income += upg.value * ownedUpgrades[key];
         }
     });
-    if (autoIncome > 0) {
-        coins += autoIncome;
+    if (income > 0) {
+        coins += income;
         updateCoins();
         saveGame();
     }
@@ -184,6 +203,7 @@ tg.MainButton.onClick(function() {
         clickPower = 1;
         Object.keys(ownedUpgrades).forEach(key => delete ownedUpgrades[key]);
         updateCoins();
+        updateAutoIncome();
         renderShop();
         tg.MainButton.hide();
     }
@@ -191,3 +211,5 @@ tg.MainButton.onClick(function() {
 
 // --- СТАРТ ИГРЫ ---
 updateCoins();
+updateAutoIncome();
+renderShop(); // Рисуем магазин сразу, чтобы кнопки "✓" отображались корректно
