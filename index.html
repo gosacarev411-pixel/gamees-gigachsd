@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Кликер Хомяка</title>
+    <!-- Подключаем иконки Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,24 +14,32 @@
     <div class="game-container">
         <h1>🐹 Кликер Хомяка</h1>
         
-        <div class="score-board">
-            Монеты: <span id="coins">0</span>
+        <!-- Верхняя панель: монеты и настройки -->
+        <div class="top-panel">
+            <div class="score-board">
+                <i class="fas fa-coins"></i> <span id="coins">0</span>
+            </div>
+            <button id="shopBtn" class="icon-btn"><i class="fas fa-store"></i></button>
         </div>
 
-        <!-- Наш кликабельный хомяк -->
-        <img id="hamster" src="https://i.imgur.com/76ZJ0aS.png" alt="Хомяк">
-
-        <!-- Блок с бустами -->
-        <div class="boosts">
-            <button id="boostBtn" class="boost-button">Купить буст (50 монет)</button>
-            <div id="boostStatus" class="boost-status"></div>
+        <!-- Центральная зона клика -->
+        <div class="click-zone">
+            <img id="hamster" src="https://i.imgur.com/76ZJ0aS.png" alt="Хомяк">
+            <div id="message" class="message"></div>
         </div>
-        
-        <div id="message" class="message"></div>
+
+        <!-- Магазин (изначально скрыт) -->
+        <div id="shopModal" class="modal">
+            <div class="modal-content">
+                <span id="closeShop" class="close-btn">&times;</span>
+                <h2><i class="fas fa-store"></i> Магазин</h2>
+                
+                <div class="upgrades-list" id="upgradesList">
+                    <!-- Сюда будут вставляться карточки улучшений через JS -->
+                </div>
+            </div>
+        </div>
     </div>
-
-    <!-- Подключаем аудиофайл. Можно заменить на любую другую ссылку на звук -->
-    <audio id="clickSound" src="https://assets.mixkit.co/sfx/preview/mixkit-unlock-game-notification-253.mp3" preload="auto"></audio>
 
     <script src="script.js"></script>
 </body>
