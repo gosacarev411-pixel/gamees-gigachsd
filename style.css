@@ -1,158 +1,129 @@
 body {
-    background-color: #f0f2f5;
+    background-color: #1a1a2e; /* Темный фон */
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     margin: 0;
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    color: #fff;
 }
 
 .game-container {
-    background: white;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    background: #16213e;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     text-align: center;
-    width: 95%;
-    max-width: 420px;
-    padding: 20px 15px;
-    position: relative;
+    width: 92%;
+    max-width: 380px;
+    padding: 15px 10px;
     box-sizing: border-box;
+    border: 2px solid #0f3460;
 }
 
-/* Верхняя панель */
+h1 {
+    margin: 0 0 15px 0;
+    font-size: 24px;
+    color: #e94560;
+}
+
+/* Панель счета */
 .top-panel {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #0f3460;
 }
 .score-board {
-    font-size: 22px;
+    font-size: 28px;
     font-weight: bold;
-    color: #333;
+    background: #0f3460;
+    padding: 5px 15px;
+    border-radius: 20px;
 }
-.score-board i {
-    color: #FFC107;
-    margin-right: 8px;
-}
+.score-board i { display: none; } /* Скрываем иконку, чтобы влезло число */
+
 .icon-btn {
     background: none;
     border: none;
-    font-size: 24px;
+    font-size: 22px;
     cursor: pointer;
-    color: #555;
+    color: #e94560;
 }
 
-/* Зона клика */
+/* Зона клика (занимает почти весь экран) */
 .click-zone {
     position: relative;
+    margin: 20px 0;
+    min-height: 200px;
 }
-#hamster {
-    width: 140px;
-    height: 140px;
+
+/* Сама монетка вместо хомяка */
+#coinBtn {
+    width: 160px;
+    height: 160px;
+    background: linear-gradient(135deg, #ffd700, #ffed4e);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
     cursor: pointer;
-    transition: transform 0.1s;
+    border: 5px solid #b89e00;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+    transition: transform 0.05s, box-shadow 0.05s;
     user-select: none;
 }
-#hamster:active {
+#coinBtn:active {
     transform: scale(0.95);
+    box-shadow: 0 0 5px rgba(255, 215, 0, 0.4);
 }
+#coinBtn i {
+    font-size: 80px;
+    color: #b89e00;
+}
+
 .message {
     position: absolute;
-    top: -40px;
+    top: -50px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(0,0,0,0.7);
+    background: rgba(233, 69, 96, 0.9);
     color: white;
-    padding: 5px 10px;
-    border-radius: 15px;
+    padding: 8px 12px;
+    border-radius: 25px;
     font-size: 14px;
     opacity: 0;
     transition: opacity 0.3s;
     pointer-events: none;
 }
-.message.show {
-    opacity: 1;
-}
+.message.show { opacity: 1; }
 
-/* Модальное окно (Магазин) */
-.modal {
-    display: none; /* Скрыто по умолчанию */
-    position: fixed;
-    z-index: 10;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.5);
-    overflow: auto;
-    padding-top: 50px;
-}
-.modal-content {
-    background: white;
-    margin: auto;
-    padding: 20px;
-    border-radius: 15px;
-    width: 90%;
-    max-width: 400px;
-    position: relative;
-}
-.close-btn {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-    color: #aaa;
-}
-.close-btn:hover {
-    color: #000;
-}
-.upgrades-list {
-    margin-top: 20px;
-    text-align: left;
-}
-.upgrade-card {
-    background: #f9f9f9;
-    border: 1px solid #eee;
-    border-radius: 10px;
-    padding: 15px;
+/* Пассивный доход */
+.auto-info {
+    font-size: 18px;
+    color: #4cc9f0;
     margin-bottom: 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: transform 0.1s;
 }
-.upgrade-card:active {
-    transform: scale(0.98);
-}
-.upgrade-info h3 {
-    margin: 0 0 5px 0;
-    font-size: 16px;
-}
-.upgrade-info p {
-    margin: 0;
-    font-size: 13px;
-    color: #666;
-}
-.upgrade-buy {
-    flex-shrink: 0;
-}
-.upgrade-btn {
-    background: #28a745;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px;
-}
-.upgrade-btn:disabled {
-    background: #ccc;
-    cursor: not-allowed;
-}
-.upgrade-btn.owned {
-    background: #6c757d;
-}
+.auto-info i { margin-right: 8px; }
+
+/* Магазин (стили почти не меняем, они уже были адаптивны) */
+.modal { display: none; position: fixed; z-index: 10; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); padding-top: 50px; }
+.modal-content { background: #16213e; margin: 20px; padding: 20px; border-radius: 15px; width: calc(100% - 40px); position: relative; color: #fff; border: 2px solid #0f3460; }
+.close-btn { position: absolute; top: 10px; right: 15px; font-size: 28px; font-weight: bold; cursor: pointer; color: #aaa; }
+.close-btn:hover { color: #fff; }
+.upgrades-list { margin-top: 20px; text-align: left; max-height: 60vh; overflow-y: auto; }
+.upgrade-card { background: #0f3460; border: 1px solid #1a1a2e; border-radius: 10px; padding: 12px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+.upgrade-card:active { transform: scale(0.98); }
+.upgrade-info h3 { margin: 0 0 4px 0; font-size: 15px; }
+.upgrade-info p { margin: 0; font-size: 12px; color: #a0a0a0; }
+.upgrade-btn { background: #e94560; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 13px; }
+.upgrade-btn:disabled { background: #555; cursor: not-allowed; }
+.upgrade-btn.owned { background: #6c757d; }
+
+/* Скроллбар для магазина */
+.upgrades-list::-webkit-scrollbar { width: 6px; }
+.upgrades-list::-webkit-scrollbar-track { background: #0f3460; }
+.upgrades-list::-webkit-scrollbar-thumb { background: #e94560; border-radius: 3px; }
