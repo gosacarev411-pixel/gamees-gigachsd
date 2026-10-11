@@ -1,0 +1,102 @@
+body {
+    background-color: #f0f2f5;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.game-container {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    text-align: center;
+    width: 90%;
+    max-width: 400px;
+}
+
+.score-board {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 20px 0;
+    color: #333;
+}
+
+#coins {
+    color: #FFD700;
+    font-size: 32px;
+}
+
+#hamster {
+    width: 150px;
+    height: 150px;
+    cursor: pointer;
+    transition: transform 0.1s;
+    user-select: none; /* Чтобы при клике не выделялось изображение */
+}
+
+#hamster:active {
+    transform: scale(0.95);
+}
+
+.message {
+    margin-top: 15px;
+    font-size: 16px;
+    color: #555;
+    min-height: 20px;
+}
+
+/* --- НОВЫЕ СТИЛИ ДЛЯ БУСТА --- */
+
+.boosts {
+    margin-top: 25px;
+}
+
+.boost-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.boost-button:hover:not(:disabled) {
+    background-color: #0056b3;
+}
+
+.boost-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.boost-status {
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    min-height: 20px;
+}
+
+/* Адаптивность для маленьких экранов */
+@media (max-width: 480px) {
+    .game-container {
+        padding: 15px;
+    }
+    #hamster {
+        width: 120px;
+        height: 120px;
+    }
+    .score-board {
+        font-size: 20px;
+    }
+    #coins {
+        font-size: 28px;
+    }
+}
